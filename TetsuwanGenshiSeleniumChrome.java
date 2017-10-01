@@ -69,6 +69,7 @@ public class TetsuwanGenshiSeleniumChrome {
         user.sendKeys("odukum@qa3");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("SSO_COMMON_PWD")));
         driver.findElement(By.name("SSO_COMMON_PWD")).sendKeys("7656198s");
+        driver.findElement(By.id("loginformsubmit")).sendKeys(Keys.CONTROL);
         driver.findElement(By.id("loginformsubmit")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("鉄腕原子")));
         System.out.println(" 鉄腕原子としてログイン ");
@@ -130,8 +131,8 @@ public class TetsuwanGenshiSeleniumChrome {
             /* SQL文を作成する */
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by id desc";
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0";
-            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
-//            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
+//            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
+            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
 
             /* SQL文を実行した結果セットをResultSetオブジェクトに格納している */
             ResultSet result = st.executeQuery(sqlStr);
