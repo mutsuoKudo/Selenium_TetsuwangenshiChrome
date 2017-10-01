@@ -61,6 +61,7 @@ public class TetsuwanGenshiSeleniumChrome {
         WebDriver driver = new ChromeDriver(options);
 //        WebDriver driver = new ChromeDriver(cap);
         driver.get("http://tetsuwangenshi.blog.so-net.ne.jp/");
+        driver.findElement(By.linkText("ログイン")).sendKeys(Keys.CONTROL);
         driver.findElement(By.linkText("ログイン")).click();
         WebDriverWait wait = new WebDriverWait(driver, 44);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("SSO_COMMON_ID")));
@@ -131,8 +132,8 @@ public class TetsuwanGenshiSeleniumChrome {
             /* SQL文を作成する */
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by id desc";
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0";
-//            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
-            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
+            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
+//            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
 
             /* SQL文を実行した結果セットをResultSetオブジェクトに格納している */
             ResultSet result = st.executeQuery(sqlStr);
@@ -204,6 +205,7 @@ public class TetsuwanGenshiSeleniumChrome {
                 System.out.println(blog_title + " 最初の記事のタイトル発見 ");
 //                logger.log(Level.INFO, blog_title + " 最初の記事のタイトル発見 ");
                 try {
+                    driver.findElement(By.cssSelector(".articles-title:first-child a")).sendKeys(Keys.CONTROL);
                     driver.findElement(By.cssSelector(".articles-title:first-child a")).click();
                 } catch (Exception e) {
                     System.out.println(blog_title + " クリックできませんでした ");
