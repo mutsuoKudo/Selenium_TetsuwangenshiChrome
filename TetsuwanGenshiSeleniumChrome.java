@@ -60,9 +60,10 @@ public class TetsuwanGenshiSeleniumChrome {
 //        cap.setCapability("marionette", true);
         WebDriver driver = new ChromeDriver(options);
 //        WebDriver driver = new ChromeDriver(cap);
-        driver.get("http://tetsuwangenshi.blog.so-net.ne.jp/");
-        driver.findElement(By.linkText("ログイン")).sendKeys(Keys.CONTROL);
-        driver.findElement(By.linkText("ログイン")).click();
+//        driver.get("http://tetsuwangenshi.blog.so-net.ne.jp/");
+        driver.get("https://blog.so-net.ne.jp/MyPage/blog/article/edit/list");
+//        driver.findElement(By.linkText("ログイン")).sendKeys(Keys.CONTROL);
+//        driver.findElement(By.linkText("ログイン")).click();
         WebDriverWait wait = new WebDriverWait(driver, 44);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("SSO_COMMON_ID")));
         WebElement user = driver.findElement(By.name("SSO_COMMON_ID"));
@@ -72,9 +73,9 @@ public class TetsuwanGenshiSeleniumChrome {
         driver.findElement(By.name("SSO_COMMON_PWD")).sendKeys("7656198s");
         driver.findElement(By.id("loginformsubmit")).sendKeys(Keys.CONTROL);
         driver.findElement(By.id("loginformsubmit")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("鉄腕原子")));
-        System.out.println(" 鉄腕原子としてログイン ");
-        logger.log(Level.INFO, "鉄腕原子としてログイン：info");
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("鉄腕原子")));
+//        System.out.println(" 鉄腕原子としてログイン ");
+//        logger.log(Level.INFO, "鉄腕原子としてログイン：info");
 
         /* 接続先サーバー名を"localhost"で与えることを示している */
 //		String servername = "localhost";
@@ -132,8 +133,8 @@ public class TetsuwanGenshiSeleniumChrome {
             /* SQL文を作成する */
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by id desc";
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0";
-            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
-//            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
+//            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
+            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
 
             /* SQL文を実行した結果セットをResultSetオブジェクトに格納している */
             ResultSet result = st.executeQuery(sqlStr);
