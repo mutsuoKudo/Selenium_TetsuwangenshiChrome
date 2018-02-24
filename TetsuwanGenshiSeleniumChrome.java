@@ -87,6 +87,7 @@ public class TetsuwanGenshiSeleniumChrome {
         /* データベースの接続に用いるユーザ名をrootユーザとしている */
 //		String user_name = "root";
         String user_name = "mouseMySQL";
+//        String user_name = "javaMySQL";
 
         /* データベースの接続に用いるユーザのパスワードを指定している */
         String password = "7656198s";
@@ -134,7 +135,9 @@ public class TetsuwanGenshiSeleniumChrome {
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by id desc";
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0";
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
-            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
+            String sqlStr = "SELECT * FROM selenium_url where id >= 0 order by url";
+//            String sqlStr = "SELECT * FROM selenium_url_org where id >= 0 order by id";
+//            String sqlStr = "SELECT * FROM selenium_url where id < 20950 order by id desc";
 
             /* SQL文を実行した結果セットをResultSetオブジェクトに格納している */
             ResultSet result = st.executeQuery(sqlStr);
@@ -190,6 +193,7 @@ public class TetsuwanGenshiSeleniumChrome {
 //                    e.printStackTrace();
                     no_of_transferfail++;
                     no_of_skip++;
+                    driver.navigate().back();
                     continue;
                 }
                 try {
@@ -209,7 +213,7 @@ public class TetsuwanGenshiSeleniumChrome {
                     driver.findElement(By.cssSelector(".articles-title:first-child a")).sendKeys(Keys.CONTROL);
                     driver.findElement(By.cssSelector(".articles-title:first-child a")).click();
                 } catch (Exception e) {
-                    System.out.println(blog_title + " クリックできませんでした ");
+                    System.out.println(blog_title + " 最初の記事のタイトルがクリックできませんでした ");
                     logger.log(Level.WARNING, "{0} \u30af\u30ea\u30c3\u30af\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f {1}", new Object[]{blog_id, blog_title, blog_url, e.toString()});
 //                    e.printStackTrace();
                     no_of_clickfail++;
