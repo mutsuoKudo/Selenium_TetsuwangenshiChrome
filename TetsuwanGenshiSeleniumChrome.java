@@ -193,6 +193,7 @@ public class TetsuwanGenshiSeleniumChrome {
 //                    e.printStackTrace();
                     no_of_transferfail++;
                     no_of_skip++;
+                    logger.log(Level.INFO, "access:{0} nice:{1} skip:{2} non_title:{3} no_nice_button:{4} already_nice:{5} nice_fail:{6} transfer_fail:{7} click_fail:{8}", new Object[]{no_of_access, no_of_nice, no_of_skip, no_of_nontitle, no_of_nonicebutton, no_of_alreadynice, no_of_nicefail, no_of_transferfail, no_of_clickfail});
                     driver.navigate().back();
                     continue;
                 }
