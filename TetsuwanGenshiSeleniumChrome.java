@@ -340,7 +340,7 @@ public class TetsuwanGenshiSeleniumChrome {
                 // throw new Exception();
             }
             JOptionPane pane = new JOptionPane("処理が終了しました。" + " access: " + no_of_access + " nice: " + no_of_nice + " skip: " + no_of_skip + " non_title: " + no_of_nontitle + " no_nice_button: " + no_of_nonicebutton + " already_nice: " + no_of_alreadynice + " nice_fail: " + no_of_nicefail + " transfer_fail: " + no_of_transferfail + "c lick_fail: " + no_of_clickfail, JOptionPane.INFORMATION_MESSAGE);
-            JDialog dialog = pane.createDialog(null, "AtMicK_Chrome");
+            JDialog dialog = pane.createDialog(null, "TetsuwanGenshi_Chrome");
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
             System.out.println("*** 終了メッセージ表示終了");
