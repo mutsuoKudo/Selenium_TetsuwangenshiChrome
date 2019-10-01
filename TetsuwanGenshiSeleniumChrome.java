@@ -76,18 +76,18 @@ public class TetsuwanGenshiSeleniumChrome {
         WebDriver driver = new ChromeDriver(options);
 //        WebDriver driver = new ChromeDriver(cap);
 //        driver.get("http://tetsuwangenshi.blog.so-net.ne.jp/");
-        driver.get("https://blog.so-net.ne.jp/MyPage/blog/article/edit/list");
+        driver.get("https://sso.ss-blog.jp/account/login");
 //        driver.findElement(By.linkText("ログイン")).sendKeys(Keys.CONTROL);
 //        driver.findElement(By.linkText("ログイン")).click();
         WebDriverWait wait = new WebDriverWait(driver, 44);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("SSO_COMMON_ID")));
-        WebElement user = driver.findElement(By.name("SSO_COMMON_ID"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")));
+        WebElement user = driver.findElement(By.name("email"));
         user.clear();
-        user.sendKeys("odukum@qa3");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("SSO_COMMON_PWD")));
-        driver.findElement(By.name("SSO_COMMON_PWD")).sendKeys("7656198s");
-        driver.findElement(By.id("loginformsubmit")).sendKeys(Keys.CONTROL);
-        driver.findElement(By.id("loginformsubmit")).click();
+        user.sendKeys("mukudo@fa2.so-net.ne.jp");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("password")));
+        driver.findElement(By.name("password")).sendKeys("7656198s-");
+        driver.findElement(By.cssSelector("body > div > main > div > div > form > fieldset > button")).sendKeys(Keys.CONTROL);
+        driver.findElement(By.cssSelector("body > div > main > div > div > form > fieldset > button")).click();
 //        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("鉄腕原子")));
 //        System.out.println(" 鉄腕原子としてログイン ");
 //        logger.log(Level.INFO, "鉄腕原子としてログイン：info");
@@ -348,3 +348,7 @@ public class TetsuwanGenshiSeleniumChrome {
         }
     }
 }
+
+
+
+
