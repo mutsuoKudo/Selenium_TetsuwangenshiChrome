@@ -10,7 +10,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -49,40 +52,57 @@ public class TetsuwanGenshiSeleniumChrome {
         }
         // ログ出力レベルをCONFIG以上に設定する
         logger.setLevel(Level.ALL);
+
+        /* 途中経過表示用変数 */
+        int no_of_nice = 0;
+        int no_of_access = 0;
+        int no_of_skip = 0;
+        int no_of_nontitle = 0;
+        int no_of_nonicebutton = 0;
+        int no_of_alreadynice = 0;
+        int no_of_nicefail = 0;
+        int no_of_transferfail = 0;
+        int no_of_clickfail = 0;
+
         //chromeドライバの設定
         System.setProperty("webdriver.chrome.driver", "./exe/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("purge-memory-button");
+        options.addArguments("--purge-memory-button");
+        options.addArguments("--headless");
 //        options.addArguments("disable-accelerated-mjpeg-decode");
 //        options.addArguments("disable-accelerated-video-decode");
 //        DesiredCapabilities cap = DesiredCapabilities.chrome();
 //        cap.setCapability("marionette", true);
         WebDriver driver = new ChromeDriver(options);
 //        WebDriver driver = new ChromeDriver(cap);
-        driver.get("http://tetsuwangenshi.blog.so-net.ne.jp/");
-        driver.findElement(By.linkText("ログイン")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 60);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("SSO_COMMON_ID")));
-        WebElement user = driver.findElement(By.name("SSO_COMMON_ID"));
+//        driver.get("http://tetsuwangenshi.blog.so-net.ne.jp/");
+        driver.get("https://sso.ss-blog.jp/account/login");
+//        driver.findElement(By.linkText("ログイン")).sendKeys(Keys.CONTROL);
+//        driver.findElement(By.linkText("ログイン")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 44);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")));
+        WebElement user = driver.findElement(By.name("email"));
         user.clear();
-        user.sendKeys("odukum@qa3");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("SSO_COMMON_PWD")));
-        driver.findElement(By.name("SSO_COMMON_PWD")).sendKeys("7656198s");
-        driver.findElement(By.id("loginformsubmit")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("鉄腕原子")));
-        System.out.println(" 鉄腕原子としてログイン ");
-        logger.log(Level.INFO, "鉄腕原子としてログイン：info");
+        user.sendKeys("mukudo@fa2.so-net.ne.jp");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("password")));
+        driver.findElement(By.name("password")).sendKeys("7656198s-");
+        driver.findElement(By.cssSelector("body > div > main > div > div > form > fieldset > button")).sendKeys(Keys.CONTROL);
+        driver.findElement(By.cssSelector("body > div > main > div > div > form > fieldset > button")).click();
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("鉄腕原子")));
+//        System.out.println(" 鉄腕原子としてログイン ");
+//        logger.log(Level.INFO, "鉄腕原子としてログイン：info");
 
         /* 接続先サーバー名を"localhost"で与えることを示している */
-//		String servername = "localhost";
-        String servername = "192.168.1.212:3306";
+        String servername = "localhost";
+//        String servername = "192.168.1.212:3306";
 
         /* 接続するデータベース名をsenngokuとしている */
         String databasename = "seleniumdb";
 
         /* データベースの接続に用いるユーザ名をrootユーザとしている */
 //		String user_name = "root";
-        String user_name = "mouseMySQL";
+//        String user_name = "mouseMySQL";
+        String user_name = "javaMySQL";
 
         /* データベースの接続に用いるユーザのパスワードを指定している */
         String password = "7656198s";
@@ -91,8 +111,8 @@ public class TetsuwanGenshiSeleniumChrome {
         String serverencoding = "UTF-8";
 
         /* データベースをあらわすURLを設定している */
-//		String url = "jdbc:mysql://localhost/" + databasename;
-        String url = "jdbc:mysql://192.168.1.212:3306/" + databasename;
+        String url = "jdbc:mysql://localhost/" + databasename;
+//        String url = "jdbc:mysql://192.168.1.212:3306/" + databasename;
 
         /*
 		 * MySQLの場合、URLの形式は次のようになります。 jdbc:mysql://(サーバ名)/(データベース名)
@@ -129,21 +149,13 @@ public class TetsuwanGenshiSeleniumChrome {
             /* SQL文を作成する */
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by id desc";
 //            String sqlStr = "SELECT * FROM selenium_url where id > 0";
-            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url";
+//            String sqlStr = "SELECT * FROM selenium_url where id > 0 order by url desc";
+            String sqlStr = "SELECT * FROM selenium_url where id >= 0 order by url";
+//            String sqlStr = "SELECT * FROM selenium_url_org where id >= 0 order by id";
+//            String sqlStr = "SELECT * FROM selenium_url where id < 20950 order by id desc";
 
             /* SQL文を実行した結果セットをResultSetオブジェクトに格納している */
             ResultSet result = st.executeQuery(sqlStr);
-
-            /* 途中経過表示用変数 */
-            int no_of_nice = 0;
-            int no_of_access = 0;
-            int no_of_skip = 0;
-            int no_of_nontitle = 0;
-            int no_of_nonicebutton = 0;
-            int no_of_alreadynice = 0;
-            int no_of_nicefail = 0;
-            int no_of_transferfail = 0;
-            int no_of_clickfail = 0;
 
             /* クエリ結果を1レコードずつ出力していく */
             while (result.next()) {
@@ -181,10 +193,12 @@ public class TetsuwanGenshiSeleniumChrome {
 //                    logger.log(Level.INFO, blog_url + " に移動 ");
                 } catch (Exception e) {
                     System.out.println(blog_title + " URLの移動に失敗しました ");
-                    logger.log(Level.WARNING, "{0} URL\u306e\u79fb\u52d5\u306b\u5931\u6557\u3057\u307e\u3057\u305f {1}", new Object[]{blog_id,blog_title,blog_url, e.toString()});
+                    logger.log(Level.WARNING, "{0} URL\u306e\u79fb\u52d5\u306b\u5931\u6557\u3057\u307e\u3057\u305f {1}", new Object[]{blog_id, blog_title, blog_url, e.toString()});
 //                    e.printStackTrace();
                     no_of_transferfail++;
                     no_of_skip++;
+                    logger.log(Level.INFO, "access:{0} nice:{1} skip:{2} non_title:{3} no_nice_button:{4} already_nice:{5} nice_fail:{6} transfer_fail:{7} click_fail:{8}", new Object[]{no_of_access, no_of_nice, no_of_skip, no_of_nontitle, no_of_nonicebutton, no_of_alreadynice, no_of_nicefail, no_of_transferfail, no_of_clickfail});
+                    driver.navigate().back();
                     continue;
                 }
                 try {
@@ -192,7 +206,7 @@ public class TetsuwanGenshiSeleniumChrome {
                             .visibilityOfElementLocated(By.cssSelector(".articles-title:first-child a")));
                 } catch (Exception e) {
                     System.out.println(blog_title + " 最初の記事のタイトルが見つかりませんでした ");
-                    logger.log(Level.WARNING, "{0} \u6700\u521d\u306e\u8a18\u4e8b\u306e\u30bf\u30a4\u30c8\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f {1}", new Object[]{blog_id,blog_title,blog_url, e.toString()});
+                    logger.log(Level.WARNING, "{0} \u6700\u521d\u306e\u8a18\u4e8b\u306e\u30bf\u30a4\u30c8\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f {1}", new Object[]{blog_id, blog_title, blog_url, e.toString()});
 //                    e.printStackTrace();
                     no_of_nontitle++;
                     no_of_skip++;
@@ -201,10 +215,11 @@ public class TetsuwanGenshiSeleniumChrome {
                 System.out.println(blog_title + " 最初の記事のタイトル発見 ");
 //                logger.log(Level.INFO, blog_title + " 最初の記事のタイトル発見 ");
                 try {
+                    driver.findElement(By.cssSelector(".articles-title:first-child a")).sendKeys(Keys.CONTROL);
                     driver.findElement(By.cssSelector(".articles-title:first-child a")).click();
                 } catch (Exception e) {
-                    System.out.println(blog_title + " クリックできませんでした ");
-                    logger.log(Level.WARNING, "{0} \u30af\u30ea\u30c3\u30af\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f {1}", new Object[]{blog_id,blog_title,blog_url, e.toString()});
+                    System.out.println(blog_title + " 最初の記事のタイトルがクリックできませんでした ");
+                    logger.log(Level.WARNING, "{0} \u30af\u30ea\u30c3\u30af\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f {1}", new Object[]{blog_id, blog_title, blog_url, e.toString()});
 //                    e.printStackTrace();
                     no_of_clickfail++;
                     no_of_skip++;
@@ -222,13 +237,14 @@ public class TetsuwanGenshiSeleniumChrome {
                     if (niceButtonDisplayed) {
                         System.out.println(" 個別記事のniceボタン発見 ");
 //                        logger.log(Level.INFO, "個別記事のniceボタン発見");
-                        driver.findElement(By.cssSelector("#myblog-nice-insert-area > input:nth-child(1)")).click();
+                        nice_button.sendKeys(Keys.CONTROL);
+                        nice_button.click();
                         try {
                             wait.until(ExpectedConditions.visibilityOfElementLocated(
                                     By.cssSelector("#myblog-nice-delete-owner-area > input:nth-child(1)")));
                         } catch (Exception e) {
                             System.out.println(blog_title + " niceの押下に失敗しました ");
-                            logger.log(Level.WARNING, "{0} nice\u306e\u62bc\u4e0b\u306b\u5931\u6557\u3057\u307e\u3057\u305f {1}", new Object[]{blog_id,blog_title,blog_url, e.toString()});
+                            logger.log(Level.WARNING, "{0} nice\u306e\u62bc\u4e0b\u306b\u5931\u6557\u3057\u307e\u3057\u305f {1}", new Object[]{blog_id, blog_title, blog_url, e.toString()});
 //                            e.printStackTrace();
                             no_of_nicefail++;
                             no_of_skip++;
@@ -245,7 +261,7 @@ public class TetsuwanGenshiSeleniumChrome {
                     }
                 } catch (Exception e) {
                     System.out.println(blog_title + " niceボタンが見つかりませんでした ");
-                    logger.log(Level.WARNING, "{0} nice\u30dc\u30bf\u30f3\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f {1}", new Object[]{blog_id,blog_title,blog_url, e.toString()});
+                    logger.log(Level.WARNING, "{0} nice\u30dc\u30bf\u30f3\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f {1}", new Object[]{blog_id, blog_title, blog_url, e.toString()});
 //                    e.printStackTrace();
                     no_of_nonicebutton++;
                     no_of_skip++;
@@ -256,8 +272,8 @@ public class TetsuwanGenshiSeleniumChrome {
                 driver.get("http://tetsuwangenshi.blog.so-net.ne.jp/");
 
             } catch (Exception e) {
-                    System.out.println("自分の記事に戻るのに失敗しました ");
-                    logger.log(Level.WARNING, "\u81ea\u5206\u306e\u8a18\u4e8b\u306b\u623b\u308b\u306e\u306b\u5931\u6557\u3057\u307e\u3057\u305f {0}", e.toString());
+                System.out.println("自分の記事に戻るのに失敗しました ");
+                logger.log(Level.WARNING, "\u81ea\u5206\u306e\u8a18\u4e8b\u306b\u623b\u308b\u306e\u306b\u5931\u6557\u3057\u307e\u3057\u305f {0}", e.toString());
 //                    e.printStackTrace();
             } finally {
                 /* 時刻を格納する変数 */
@@ -271,10 +287,10 @@ public class TetsuwanGenshiSeleniumChrome {
                 logger.log(Level.INFO, "access:{0} nice:{1} skip:{2} non_title:{3} no_nice_button:{4} already_nice:{5} nice_fail:{6} transfer_fail:{7} click_fail:{8}", new Object[]{no_of_access, no_of_nice, no_of_skip, no_of_nontitle, no_of_nonicebutton, no_of_alreadynice, no_of_nicefail, no_of_transferfail, no_of_clickfail});
             }
             try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("ブログトップへ戻る")));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("ブログトップへ戻る")));
             } catch (Exception e) {
-                    System.out.println("自分の記事の「ブログトップに戻る」を見つけられませんでした ");
-                    logger.log(Level.WARNING, "\u81ea\u5206\u306e\u8a18\u4e8b\u306e\u300c\u30d6\u30ed\u30b0\u30c8\u30c3\u30d7\u306b\u623b\u308b\u300d\u3092\u898b\u3064\u3051\u3089\u308c\u307e\u305b\u3093\u3067\u3057\u305f {0}", e.toString());                
+                System.out.println("自分の記事の「ブログトップに戻る」を見つけられませんでした ");
+                logger.log(Level.WARNING, "\u81ea\u5206\u306e\u8a18\u4e8b\u306e\u300c\u30d6\u30ed\u30b0\u30c8\u30c3\u30d7\u306b\u623b\u308b\u300d\u3092\u898b\u3064\u3051\u3089\u308c\u307e\u305b\u3093\u3067\u3057\u305f {0}", e.toString());
             }
             /*selenium driver 終了 */
             driver.quit();
@@ -323,6 +339,16 @@ public class TetsuwanGenshiSeleniumChrome {
                 /* 例外を投げちゃうぞ */
                 // throw new Exception();
             }
+            JOptionPane pane = new JOptionPane("処理が終了しました。" + " access: " + no_of_access + " nice: " + no_of_nice + " skip: " + no_of_skip + " non_title: " + no_of_nontitle + " no_nice_button: " + no_of_nonicebutton + " already_nice: " + no_of_alreadynice + " nice_fail: " + no_of_nicefail + " transfer_fail: " + no_of_transferfail + " click_fail: " + no_of_clickfail, JOptionPane.INFORMATION_MESSAGE);
+            JDialog dialog = pane.createDialog(null, "TetsuwanGenshi_Chrome");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+            System.out.println("*** 終了メッセージ表示終了");
+            dialog.dispose();
         }
     }
 }
+
+
+
+
