@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,15 +11,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -69,6 +71,7 @@ public class TetsuwanGenshiSeleniumChrome {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--purge-memory-button");
         options.addArguments("--headless");
+        options.addArguments("--disable-gpu");
 //        options.addArguments("disable-accelerated-mjpeg-decode");
 //        options.addArguments("disable-accelerated-video-decode");
 //        DesiredCapabilities cap = DesiredCapabilities.chrome();
@@ -111,7 +114,7 @@ public class TetsuwanGenshiSeleniumChrome {
         String serverencoding = "UTF-8";
 
         /* データベースをあらわすURLを設定している */
-        String url = "jdbc:mysql://localhost/" + databasename;
+        String url = "jdbc:mysql://localhost/" + databasename + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 //        String url = "jdbc:mysql://192.168.1.212:3306/" + databasename;
 
         /*
@@ -132,7 +135,13 @@ public class TetsuwanGenshiSeleniumChrome {
 			 * クラスローダによりJDBCドライバを読み込んでいることを示している。
 			 * 引数は、データベースにアクセスするためのJDBCドライバのクラス名である。
              */
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            try {
+				Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+			} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+					| SecurityException e1) {
+				// TODO 自動生成された catch ブロック
+				e1.printStackTrace();
+			}
 
             /* DriverManagerクラスのgetConnectionメソッドを使ってデータベースに接続する。 */
             con = DriverManager.getConnection(url, user_name, password);
