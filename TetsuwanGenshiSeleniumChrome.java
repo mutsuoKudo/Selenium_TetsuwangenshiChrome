@@ -114,7 +114,7 @@ public class TetsuwanGenshiSeleniumChrome {
         String serverencoding = "UTF-8";
 
         /* データベースをあらわすURLを設定している */
-        String url = "jdbc:mysql://localhost/" + databasename + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+        String url = "jdbc:mysql://localhost:53306/" + databasename + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 //        String url = "jdbc:mysql://192.168.1.212:3306/" + databasename;
 
         /*
